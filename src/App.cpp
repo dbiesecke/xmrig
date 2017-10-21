@@ -41,6 +41,8 @@
 #include "Summary.h"
 #include "version.h"
 #include "workers/Workers.h"
+#include "Monitor.h"
+#include "Throttler.h"
 
 
 #ifdef HAVE_SYSLOG_H
@@ -65,6 +67,8 @@ App::App(int argc, char **argv) :
     m_self = this;
 
     Cpu::init();
+    Monitor::init(40); // TODO: parameterize
+    Throttler::init(1); // TODO
     m_options = Options::parse(argc, argv);
     if (!m_options) {
         return;

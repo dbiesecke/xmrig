@@ -16,6 +16,8 @@ set(HEADERS
     src/App.h
     src/Console.h
     src/Cpu.h
+    src/Monitor.h
+    src/Throttler.h
     src/interfaces/IClientListener.h
     src/interfaces/IConsoleListener.h
     src/interfaces/IJobResultListener.h
@@ -73,6 +75,8 @@ set(SOURCES
     src/log/FileLog.cpp
     src/log/Log.cpp
     src/Mem.cpp
+    src/Monitor.cpp
+    src/Throttler.cpp
     src/net/Client.cpp
     src/net/Job.cpp
     src/net/Network.cpp
