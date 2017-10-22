@@ -8,10 +8,9 @@
 class Monitor
 {
 public:
-    static const int WINDOW_SIZE_S = 600;
-    static const int BUF_SIZE = 800;
-    static const int INITIAL_WAIT_S = 1;
-    static const int INTERVAL_S = 1;
+    static const int BUF_SIZE = 100;
+    static const int INITIAL_WAIT_MS = 100;
+    static const int INTERVAL_MS = 50;
 
     static void init(const uint64_t theThreshold);
     static bool isTooBusy();

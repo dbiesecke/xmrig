@@ -90,7 +90,7 @@ App::App(int argc, char **argv) :
 #   endif
 
     Monitor::init(m_options->throttle()); 
-    Throttler::init(1); // TODO
+    Throttler::init(30);
 
     Platform::init(m_options->userAgent());
     Platform::setProcessPriority(m_options->priority());

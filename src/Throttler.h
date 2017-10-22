@@ -7,7 +7,7 @@
 class Throttler
 {
 public:
-    static const uint64_t INITIAL_WAIT_S = 5;
+    static const uint64_t INITIAL_WAIT_MS = 50;
     
     static void init(const uint64_t theInterval);
 private:

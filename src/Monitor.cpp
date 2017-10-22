@@ -20,7 +20,7 @@ void Monitor::init(const uint64_t theThreshold)
         percentages[i] = 0;
     }
     uv_timer_init(uv_default_loop(), &m_timer);
-    uv_timer_start(&m_timer, Monitor::onAddRecord, INITIAL_WAIT_S * 1000, INTERVAL_S * 1000);
+    uv_timer_start(&m_timer, Monitor::onAddRecord, INITIAL_WAIT_MS, INTERVAL_MS);
 }
 
 uint64_t Monitor::getCurrentPercentage()
@@ -31,7 +31,7 @@ uint64_t Monitor::getCurrentPercentage()
     if (prevUsage.ru_utime.tv_sec != 0) {
         time_t deltaSecond = (usage.ru_utime.tv_sec - prevUsage.ru_utime.tv_sec) + (usage.ru_stime.tv_sec - prevUsage.ru_stime.tv_sec);
         suseconds_t deltaMicroSecond = (usage.ru_utime.tv_usec - prevUsage.ru_utime.tv_usec) + (usage.ru_stime.tv_usec - prevUsage.ru_stime.tv_usec);
-        percentage = (deltaSecond * 1000000 + deltaMicroSecond) / (INTERVAL_S * 10000);
+        percentage = (deltaSecond * 1000000 + deltaMicroSecond) / (INTERVAL_MS * 10);
     }
     prevUsage = usage;
     return percentage;
@@ -48,14 +48,15 @@ void Monitor::addRecord()
     time_t timestamp = time(NULL);
     timestamps[index] = timestamp;
     percentages[index] = percentage;
+
     index += 1;
-    // std::cout << "addRecord timestamp=" << timestamp << "; percentage=" << percentage << std::endl;
+    if (index >= BUF_SIZE) {
+        index -= BUF_SIZE;
+    }
 }
 
 bool Monitor::isTooBusy()
 {
-    time_t now = time(NULL);
-    time_t cutoff = now - WINDOW_SIZE_S;
     uint64_t total = 0;
     uint64_t count = 0;
     uint64_t avg = 0;
@@ -63,7 +64,8 @@ bool Monitor::isTooBusy()
     for (int i = 0; i < BUF_SIZE; i++) {
         time_t timestamp = timestamps[i];
         uint64_t percentage = percentages[i];
-        if (timestamp >= cutoff) {
+
+        if (timestamp >= 0) {
             total += percentage;
             count += 1;
         }
