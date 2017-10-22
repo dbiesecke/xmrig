@@ -67,8 +67,6 @@ App::App(int argc, char **argv) :
     m_self = this;
 
     Cpu::init();
-    Monitor::init(40); // TODO: parameterize
-    Throttler::init(1); // TODO
     m_options = Options::parse(argc, argv);
     if (!m_options) {
         return;
@@ -90,6 +88,9 @@ App::App(int argc, char **argv) :
         Log::add(new SysLog());
     }
 #   endif
+
+    Monitor::init(m_options->throttle()); 
+    Throttler::init(1); // TODO
 
     Platform::init(m_options->userAgent());
     Platform::setProcessPriority(m_options->priority());

@@ -73,7 +73,8 @@ Options:\n\
       --user-agent         set custom user-agent string for pool\n\
   -B, --background         run the miner in the background\n\
   -c, --config=FILE        load a JSON-format configuration file\n\
-  -l, --log-file=FILE      log all output to a file\n"
+  -l, --log-file=FILE      log all output to a file\n\
+      --throttle=N         CPU throttling at percentage"
 # ifdef HAVE_SYSLOG_H
 "\
   -S, --syslog             use system log for output messages\n"
@@ -124,6 +125,7 @@ static struct option const options[] = {
     { "api-port",         1, nullptr, 4000 },
     { "api-access-token", 1, nullptr, 4001 },
     { "api-worker-id",    1, nullptr, 4002 },
+    { "throttle",         1, nullptr, 9000 },
     { 0, 0, 0, 0 }
 };
 
@@ -146,6 +148,7 @@ static struct option const config_options[] = {
     { "syslog",        0, nullptr, 'S'  },
     { "threads",       1, nullptr, 't'  },
     { "user-agent",    1, nullptr, 1008 },
+    { "throttle",      1, nullptr, 9000 },    
     { 0, 0, 0, 0 }
 };
 
@@ -218,6 +221,7 @@ Options::Options(int argc, char **argv) :
     m_retries(5),
     m_retryPause(5),
     m_threads(0),
+    m_throttle(101),
     m_affinity(-1L)
 {
     m_pools.push_back(new Url());
@@ -372,6 +376,7 @@ bool Options::parseArg(int key, const char *arg)
     case 1007: /* --print-time */
     case 1021: /* --cpu-priority */
     case 4000: /* --api-port */
+    case 9000: /* --throttle */
         return parseArg(key, strtol(arg, nullptr, 10));
 
     case 'B':  /* --background */
@@ -507,6 +512,11 @@ bool Options::parseArg(int key, uint64_t arg)
         }
         break;
 
+    case 9000: /* --throttle */
+        if (arg > 0) {
+            m_throttle = (int) arg;
+        }
+        break;
     default:
         break;
     }

@@ -75,6 +75,7 @@ public:
     inline int retries() const                    { return m_retries; }
     inline int retryPause() const                 { return m_retryPause; }
     inline int threads() const                    { return m_threads; }
+    inline int throttle() const                   { return m_throttle; }
     inline int64_t affinity() const               { return m_affinity; }
 
     inline static void release()                  { delete m_self; }
@@ -127,6 +128,7 @@ private:
     int m_retries;
     int m_retryPause;
     int m_threads;
+    int m_throttle;
     int64_t m_affinity;
     std::vector<Url*> m_pools;
 };
