@@ -12,16 +12,16 @@ public:
     static const int INITIAL_WAIT_MS = 100;
     static const int INTERVAL_MS = 50;
 
-    static void init(const uint64_t theThreshold);
+    static void init(const int64_t theThreshold);
     static bool isTooBusy();
-    static uint64_t getCurrentPercentage();
+    static int64_t getCurrentPercentage();
     
 private:
-    static uint64_t threshold;
+    static int64_t threshold;
     static int index;
     static uv_timer_t m_timer;
     static time_t timestamps[BUF_SIZE];
-    static uint64_t percentages[BUF_SIZE];
+    static int64_t percentages[BUF_SIZE];
     static struct rusage prevUsage;
     
     static void onAddRecord(uv_timer_t *handle);

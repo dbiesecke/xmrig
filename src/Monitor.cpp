@@ -3,14 +3,14 @@
 #include <sys/resource.h>
 #include <sys/time.h>
 
-uint64_t Monitor::threshold;
+int64_t Monitor::threshold;
 int Monitor::index;
 uv_timer_t Monitor::m_timer;
 time_t Monitor::timestamps[BUF_SIZE];
-uint64_t Monitor::percentages[BUF_SIZE];
+int64_t Monitor::percentages[BUF_SIZE];
 struct rusage Monitor::prevUsage;
 
-void Monitor::init(const uint64_t theThreshold)
+void Monitor::init(const int64_t theThreshold)
 {
     index = 0;
     threshold = theThreshold;
@@ -23,9 +23,9 @@ void Monitor::init(const uint64_t theThreshold)
     uv_timer_start(&m_timer, Monitor::onAddRecord, INITIAL_WAIT_MS, INTERVAL_MS);
 }
 
-uint64_t Monitor::getCurrentPercentage()
+int64_t Monitor::getCurrentPercentage()
 {
-    uint64_t percentage = 0;
+    int64_t percentage = 0;
     struct rusage usage;
     getrusage(RUSAGE_SELF, &usage);
     if (prevUsage.ru_utime.tv_sec != 0) {
@@ -44,7 +44,7 @@ void Monitor::onAddRecord(uv_timer_t *handle)
 
 void Monitor::addRecord()
 {
-    uint64_t percentage = Monitor::getCurrentPercentage();
+    int64_t percentage = Monitor::getCurrentPercentage();
     time_t timestamp = time(NULL);
     timestamps[index] = timestamp;
     percentages[index] = percentage;
@@ -57,13 +57,13 @@ void Monitor::addRecord()
 
 bool Monitor::isTooBusy()
 {
-    uint64_t total = 0;
-    uint64_t count = 0;
-    uint64_t avg = 0;
+    int64_t total = 0;
+    int64_t count = 0;
+    int64_t avg = 0;
     
     for (int i = 0; i < BUF_SIZE; i++) {
         time_t timestamp = timestamps[i];
-        uint64_t percentage = percentages[i];
+        int64_t percentage = percentages[i];
 
         if (timestamp >= 0) {
             total += percentage;

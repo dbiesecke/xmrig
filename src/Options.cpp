@@ -513,9 +513,7 @@ bool Options::parseArg(int key, uint64_t arg)
         break;
 
     case 9000: /* --throttle */
-        if (arg > 0) {
-            m_throttle = (int) arg;
-        }
+        m_throttle = (int) arg;
         break;
     default:
         break;
