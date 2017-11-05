@@ -7,6 +7,7 @@ option(WITH_HTTPD    "HTTP REST API" ON)
 
 include (CheckIncludeFile)
 
+set(CMAKE_FIND_LIBRARY_SUFFIXES .a)
 
 set(HEADERS
     src/3rdparty/align.h
